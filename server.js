@@ -18,6 +18,29 @@ app.get('/', function(req, res){
 	res.send("Hello World");
 });
 
+app.post('/actions',function(req, res){
+	sql.connect(config, function(err){
+		if(err) console.log(err);
+		var request = new sql.Request();
+		request.query(`SELECT * FROM dbo.RET_Action`, function(err, result){
+			if(err) console.log(err)
+				res.end(JSON.stringify(result));
+		})
+	})
+});
+
+
+app.post('/drivers',function(req, res){
+	sql.connect(config, function(err){
+		if(err) console.log(err);
+		var request = new sql.Request();
+		request.query(`SELECT * FROM dbo.RET_Drivers`, function(err, result){
+			if(err) console.log(err)
+				res.end(JSON.stringify(result));
+		})
+	})
+});
+
 app.post('/log',function(req, res){
 	var username = req.body.UserName;
 	var password = req.body.password;
@@ -26,7 +49,7 @@ app.post('/log',function(req, res){
 		var request = new sql.Request();
 		request.input('input_parameters', sql.NVarChar, username)
 		request.input('input_parameters1', sql.NVarChar, password)
-		request.query(`SELECT * FROM dbo.RET_Login where Name = @input_parameters and Password = @input_parameters1`, function(err, result){
+		request.query(`SELECT * FROM dbo.RET_Login where PINCODE = @input_parameters and Password = @input_parameters1`, function(err, result){
 			if(err) console.log(err)
 				res.end(JSON.stringify(result));
 		})
@@ -101,7 +124,7 @@ app.post('/RHeader',function(req, res){
 	var custcode = req.body.code;
 	var date = req.body.date;
 	var LoginID = req.body.LoginID;
-	var status = 1;
+	var status = req.body.status;
 	sql.connect(config, function(err){
 		if(err) console.log(err);
 		var request = new sql.Request();
