@@ -3,7 +3,7 @@ var bodyParser = require("body-parser");
 var app = express();
 var sql = require('mssql');
 var config = {
-		user: 'Test',
+    user: 'Test',
     password: 'Test@123',
     server: 'mssql-16028-0.cloudclusters.net', // You can use 'localhost\\instance' to connect to named instance
     database: 'IIHF_CReturns',
@@ -14,14 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false })); 
 
 app.get('/', function(req, res){
-	sql.connect(config, function(err){
-		if(err) console.log(err);
-		var request = new sql.Request();
-		request.query('SELECT * FROM dbo.RET_Customer', function(err, result){
-			if(err) console.log(err)
-				res.send(result.recordset[0]);
-		})
-	})
+	res.send("Hello World");
 });
 
 app.post('/log',function(req, res){
