@@ -232,6 +232,6 @@ app.post('/lines',function(req, res){
 });
 
 
-var server = app.listen(3000, function(){
+var server = app.listen(0, function(){
 	console.log("server is running");
 })
