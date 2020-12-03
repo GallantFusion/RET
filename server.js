@@ -9,6 +9,7 @@ var config = {
     database: 'IIHF_CReturns',
     port: 16028
 	};
+var port = process.env.PORT || 8080
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false })); 
@@ -232,6 +233,6 @@ app.post('/lines',function(req, res){
 });
 
 
-var server = app.listen(0, function(){
+var server = app.listen(port, function(){
 	console.log("server is running");
 })
