@@ -75,7 +75,7 @@ app.post('/prod',function(req, res){
 		if(err) console.log(err);
 		var request = new sql.Request();
 		request.input('input_parameters', sql.NVarChar, custcode)
-		request.query(`SELECT * FROM dbo.RET_StockItem where StockCode = @input_parameters`, function(err, result){
+		request.query(`SELECT * FROM dbo.RET_StockItem where Barcode = @input_parameters`, function(err, result){
 			if(err) console.log(err)
 				res.end(JSON.stringify(result));
 		})
@@ -125,6 +125,12 @@ app.post('/RHeader',function(req, res){
 	var date = req.body.date;
 	var LoginID = req.body.LoginID;
 	var status = req.body.status;
+	var imageID = req.body.image;
+	var DriverID = req.body.DriverID;
+	var DriverS = req.body.DS;
+	var DateCollected = req.body.DC;
+	var CustomerContact = req.body.CC;
+	if(CustomerContact != 'null')
 	sql.connect(config, function(err){
 		if(err) console.log(err);
 		var request = new sql.Request();
@@ -132,8 +138,31 @@ app.post('/RHeader',function(req, res){
 		request.input('input_parameters1', sql.DateTime, date)
 		request.input('input_parameters2', sql.NVarChar, LoginID)
 		request.input('input_parameters3', sql.Int, status)
+		request.input('input_parameter4', sql.Int, imageID)
+		request.input('input_parameters5', sql.Int, DriverID)
+		request.input('input_parameters6', sql.Int, DriverS)
+		request.input('input_parameters7', sql.DateTime, DC)
+		request.input('input_parameters8', sql.NvarChar, CC)
 		request.output('ouput_parameter', sql.Int)
-		request.query(`INSERT INTO dbo.RET_ReturnsHeader (CustomerID , DateTime, Status, LoginID) OUTPUT Inserted.ID VALUES ( @input_parameters, @input_parameters1, @input_parameters3, @input_parameters2 )`, function(err, result){
+		request.query(`INSERT INTO dbo.RET_ReturnsHeader (CustomerID , DateTime, Status, LoginID, ReturnImageID, DriverID, DriverSigned, DateCollected) OUTPUT Inserted.ID VALUES ( @input_parameters, @input_parameters1, @input_parameters3, @input_parameters2, @input_parameters4, @input_parameters5, @input_parameters6, @input_parameters7)`, function(err, result){
+			if(err) console.log(err)
+				res.end(JSON.stringify(result));
+		})
+	})
+	sql.connect(config, function(err){
+		if(err) console.log(err);
+		var request = new sql.Request();
+		request.input('input_parameters', sql.NVarChar, custcode)
+		request.input('input_parameters1', sql.DateTime, date)
+		request.input('input_parameters2', sql.NVarChar, LoginID)
+		request.input('input_parameters3', sql.Int, status)
+		request.input('input_parameter4', sql.Int, imageID)
+		request.input('input_parameters5', sql.Int, DriverID)
+		request.input('input_parameters6', sql.Int, DriverS)
+		request.input('input_parameters7', sql.DateTime, DC)
+		request.input('input_parameters7', sql.NvarChar, CC)
+		request.output('ouput_parameter', sql.Int)
+		request.query(`INSERT INTO dbo.RET_ReturnsHeader (CustomerID , DateTime, Status, LoginID, ReturnImageID, DriverID, DriverSigned, DateCollected, CustomerContact) OUTPUT Inserted.ID VALUES ( @input_parameters, @input_parameters1, @input_parameters3, @input_parameters2, @input_parameters4, @input_parameters5, @input_parameters6, @input_parameters7, @input_parameters8)`, function(err, result){
 			if(err) console.log(err)
 				res.end(JSON.stringify(result));
 		})
@@ -163,7 +192,9 @@ app.post('/REPost',function(req, res){
 	var BBD = req.body.BBD;
 	var Destination = req.body.Destination;
 	var Note = req.body.Note;
-	var Act = 'N';
+	var QtyCase = req.body.QC;
+	var QtySing = req.body.QS;
+	var Act = req.body.act;
 	if(BBD == 'null'){
 		console.log(null);
 	sql.connect(config, function(err){
@@ -176,8 +207,10 @@ app.post('/REPost',function(req, res){
 		request.input('input_parameters4', sql.Int, ImageID)
 		request.input('input_parameters6', sql.Int, Destination)
 		request.input('input_parameters7', sql.NVarChar, Note)
-		request.input('input_parameters8', sql.NVarChar, Act)
-		request.query(`INSERT INTO dbo.RET_ReturnDetail (ReturnsHeaderID , StockItemID, ReasonID, InvoiceRef, ImageID, DestinationID, Note, Act) VALUES ( @input_parameters, @input_parameters1, @input_parameters2, @input_parameters3, @input_parameters4, @input_parameters6, @input_parameters7, @input_parameters8 )`, function(err, result){
+		request.input('input_parameters10', sql.NVarChar, Act)
+		request.input('input_parameters8', sql.NVarChar, QC)
+		request.input('input_parameters9', sql.NVarChar, QS)
+		request.query(`INSERT INTO dbo.RET_ReturnDetail (ReturnsHeaderID , StockItemID, ReasonID, InvoiceRef, ImageID, DestinationID, Note, QtyCase, QtySing, Action) VALUES ( @input_parameters, @input_parameters1, @input_parameters2, @input_parameters3, @input_parameters4, @input_parameters6, @input_parameters7, @input_parameters8, @input_parameters9, @input_parameters10)`, function(err, result){
 			if(err) console.log(err)
 				res.end(JSON.stringify(result));
 		})
@@ -194,8 +227,10 @@ app.post('/REPost',function(req, res){
 		request.input('input_parameters5', sql.DateTime, BBD)
 		request.input('input_parameters6', sql.Int, Destination)
 		request.input('input_parameters7', sql.NVarChar, Note)
-		request.input('input_parameters8', sql.NVarChar, Act)
-		request.query(`INSERT INTO dbo.RET_ReturnDetail (ReturnsHeaderID , StockItemID, ReasonID, InvoiceRef, ImageID, BBD, DestinationID, Note, Act) VALUES ( @input_parameters, @input_parameters1, @input_parameters2, @input_parameters3, @input_parameters4, @input_parameters5, @input_parameters6, @input_parameters7, @input_parameters8 )`, function(err, result){
+		request.input('input_parameters10', sql.NVarChar, Act)
+		request.input('input_parameters8', sql.NVarChar, QC)
+		request.input('input_parameters9', sql.NVarChar, QS)
+		request.query(`INSERT INTO dbo.RET_ReturnDetail (ReturnsHeaderID , StockItemID, ReasonID, InvoiceRef, ImageID, BBD, DestinationID, Note, QtyCase, QtySing, Action) VALUES ( @input_parameters, @input_parameters1, @input_parameters2, @input_parameters3, @input_parameters4, @input_parameters5, @input_parameters6, @input_parameters7, @input_parameters8, @input_parameters9, @input_parameters10)`, function(err, result){
 			if(err) console.log(err)
 				res.end(JSON.stringify(result));
 		})
