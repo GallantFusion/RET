@@ -82,6 +82,19 @@ app.post('/prod',function(req, res){
 	})
 });
 
+app.post('/prodB',function(req, res){
+	var custcode = req.body.code;
+	sql.connect(config, function(err){
+		if(err) console.log(err);
+		var request = new sql.Request();
+		request.input('input_parameters', sql.NVarChar, custcode)
+		request.query(`SELECT * FROM dbo.RET_StockItem where Barcode = @input_parameters`, function(err, result){
+			if(err) console.log(err)
+				res.end(JSON.stringify(result));
+		})
+	})
+});
+
 app.post('/Invo',function(req, res){
 	var custcode = req.body.code;
 	var procode = req.body.procode;
