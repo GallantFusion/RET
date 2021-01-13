@@ -257,7 +257,7 @@ app.post('/AuthReturns',function(req, res){
 		if(err) console.log(err);
 		var request = new sql.Request();
 		request.input('input_parameters', sql.NVarChar, LoginID)
-		request.query(`Select P.ID, P.CustomerID, P.CustomerName, P.DateTime, Status_Desc from dbo.RET_ReturnStatus INNER JOIN (Select dbo.RET_ReturnsHeader.ID, dbo.RET_ReturnsHeader.CustomerID, dbo.RET_Customer.CustomerName, dbo.RET_ReturnsHeader.DateTime, dbo.RET_ReturnsHeader.Status From dbo.RET_ReturnsHeader INNER JOIN dbo.RET_Customer ON dbo.RET_ReturnsHeader.CustomerID = dbo.RET_Customer.ID where LoginID = @input_parameters and status != 4) P ON dbo.RET_ReturnStatus.ID = P.Status`, function(err, result){
+		request.query(`Select P.ID, P.CustomerID, P.CustomerName, P.DateTime, Status_Desc from dbo.RET_ReturnStatus INNER JOIN (Select dbo.RET_ReturnsHeader.ID, dbo.RET_ReturnsHeader.CustomerID, C.CustomerName, dbo.RET_ReturnsHeader.DateTime, dbo.RET_ReturnsHeader.Status From dbo.RET_ReturnsHeader INNER JOIN dbo.RET_Customer C ON dbo.RET_ReturnsHeader.CustomerID = C.ID where C.ManagedBy = @input_parameters and status != 4) P ON dbo.RET_ReturnStatus.ID = P.Status`, function(err, result){
 			if(err) console.log(err)
 				res.end(JSON.stringify(result));
 		})
